@@ -1,1 +1,134 @@
 @import "breakpoints";
+
+$bg-color: #f4f4f4;
+$text-color: #333;
+$accent-color: #4a4a4a;
+$border-color: #ddd;
+$button-bg: #e0e0e0;
+$button-text: #333;
+$button-hover: #d0d0d0;
+$button-disabled: #f0f0f0;
+
+body {
+  background-color: $bg-color;
+  color: $text-color;
+  font-family: 'Georgia', serif;
+}
+
+.App {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include lg {
+    max-width: 800px;
+  }
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: $accent-color;
+
+  @include md {
+    font-size: 28px;
+  }
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+}
+
+.pdf-container {
+  background-color: white;
+  border: 1px solid $border-color;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+
+  .react-pdf__Document {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .react-pdf__Page {
+    max-width: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+
+    canvas {
+      max-width: 100%;
+      height: auto !important;
+    }
+  }
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+button {
+  background-color: $button-bg;
+  color: $button-text;
+  border: 1px solid $border-color;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $button-hover;
+  }
+
+  &:disabled {
+    background-color: $button-disabled;
+    color: lighten($button-text, 40%);
+    border-color: $button-disabled;
+    cursor: not-allowed;
+  }
+
+  @include md {
+    font-size: 16px;
+  }
+}
+
+p {
+  text-align: center;
+  margin: 10px 0;
+  font-style: italic;
+  color: $accent-color;
+}
+
+// Responsive styles
+@include xs {
+  .App {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .pdf-container {
+    padding: 10px;
+  }
+}
+
+@include lg {
+  .App {
+    padding: 30px;
+  }
+
+  .pdf-container {
+    padding: 30px;
+  }
+}
