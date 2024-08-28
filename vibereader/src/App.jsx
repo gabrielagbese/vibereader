@@ -5,7 +5,6 @@ import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import './App.scss'
 
-// PDF.js worker configuration
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url,
@@ -15,6 +14,7 @@ const STORAGE_KEY = 'vibeReaderState'
 
 function App() {
   const [file, setFile] = useState(null)
+  const [fileId, setFileId] = useState(null)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [scale, setScale] = useState(1)
@@ -29,44 +29,44 @@ function App() {
 
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
-    setPageNumber(savedState.pageNumber || 1)
-    setScale(savedState.scale || 1)
     setDarkMode(savedState.darkMode || false)
-    setBookmarks(savedState.bookmarks || [])
     setIsSidebarOpen(savedState.isSidebarOpen !== undefined ? savedState.isSidebarOpen : true)
   }, [])
 
   useEffect(() => {
-    const stateToSave = {
-      pageNumber,
-      scale,
-      darkMode,
-      bookmarks,
-      isSidebarOpen
+    if (fileId) {
+      const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+      const fileState = savedState[fileId] || {}
+      setPageNumber(fileState.pageNumber || 1)
+      setScale(fileState.scale || 1)
+      setBookmarks(fileState.bookmarks || [])
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave))
-  }, [pageNumber, scale, darkMode, bookmarks, isSidebarOpen])
+  }, [fileId])
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) { // Adjust this breakpoint as needed
-        setIsSidebarOpen(true);
+    const stateToSave = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+    if (fileId) {
+      stateToSave[fileId] = {
+        pageNumber,
+        scale,
+        bookmarks
       }
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Call it initially
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    }
+    stateToSave.darkMode = darkMode
+    stateToSave.isSidebarOpen = isSidebarOpen
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave))
+  }, [fileId, pageNumber, scale, bookmarks, darkMode, isSidebarOpen])
 
   const onFileChange = (event) => {
     const selectedFile = event.target.files[0]
     if (selectedFile) {
       setFile(selectedFile)
+      const newFileId = `${selectedFile.name}_${selectedFile.lastModified}`
+      setFileId(newFileId)
       setError(null)
       setSearchResults([])
       setCurrentSearchResult(-1)
+      setPageNumber(1) // Reset to first page for new file
     }
   }
 
