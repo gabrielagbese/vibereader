@@ -12,10 +12,6 @@ body {
 }
 
 .App {
-  height: 100vh;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -23,13 +19,139 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  height: 100vh;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 720px) {
   .App {
-    max-width: 800px;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+  }
+}
+
+.App.dark-mode {
+  background-color: #222;
+  color: #f4f4f4;
+}
+
+.App.dark-mode .sidebar {
+  background-color: #222;
+  border-color: #444;
+}
+
+.App.dark-mode h1,
+.App.dark-mode p {
+  color: #b0b0b0;
+}
+
+.App.dark-mode button {
+  background-color: #555;
+  color: #f4f4f4;
+  border-color: #444;
+}
+
+.App.dark-mode button:hover {
+  background-color: #666;
+}
+
+.App.dark-mode button:disabled {
+  background-color: #333;
+  color: #8e8e8e;
+  border-color: #333;
+}
+
+.App.dark-mode .pdf-container {
+  background-color: #222;
+}
+
+.App.dark-mode .controls {
+  background-color: #222;
+  border-color: #444;
+}
+
+.sidebar {
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  overflow-y: auto;
+}
+
+@media (min-width: 720px) {
+  .sidebar {
+    width: 25vw;
+    border-right: 1px solid #ddd;
+    border-bottom: none;
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 5px 10px;
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: #d0d0d0;
+}
+
+@media (min-width: 720px) {
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
+.sidebar-closed .sidebar {
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%);
+}
+
+@media (min-width: 720px) {
+  .sidebar-closed .sidebar {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+.sidebar-closed .main-content {
+  margin-left: 0;
+}
+
+@media (min-width: 720px) {
+  .sidebar-closed .main-content {
+    margin-left: 25vw;
   }
 }
 
@@ -39,29 +161,15 @@ h1 {
   color: #4a4a4a;
 }
 
-@media (min-width: 720px) {
-  h1 {
-    font-size: 28px;
-  }
-}
-
 input[type="file"] {
   margin-bottom: 20px;
+  width: 100%;
 }
 
-.pdf-container {
+.main-content {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 20px;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-  overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -69,13 +177,49 @@ input[type="file"] {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  margin-left: 0;
 }
 
-.pdf-container .react-pdf__Document {
+@media (min-width: 720px) {
+  .main-content {
+    margin-left: 25vw;
+    width: calc(100vw - 25vw) !important;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+  }
+}
+
+.pdf-container {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  overflow: auto;
+  background-color: white;
+  overflow-y: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -ms-flex-item-align: center;
+      align-self: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 85%;
+}
+
+.pdf-container .react-pdf__Document {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -90,9 +234,7 @@ input[type="file"] {
 
 .pdf-container .react-pdf__Page {
   max-width: 100%;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  height: auto !important;
 }
 
 .pdf-container .react-pdf__Page canvas {
@@ -100,14 +242,40 @@ input[type="file"] {
   height: auto !important;
 }
 
-.navigation {
+.controls {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  margin-top: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ddd;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.controls p {
+  margin: 5px 0;
+}
+
+.controls .navigation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 5px;
+}
+
+.controls .navigation button {
+  margin: 0 5px;
 }
 
 button {
@@ -120,6 +288,7 @@ button {
   border-radius: 3px;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  margin: 5px 0;
 }
 
 button:hover {
@@ -133,37 +302,150 @@ button:disabled {
   cursor: not-allowed;
 }
 
-@media (min-width: 720px) {
-  button {
-    font-size: 16px;
-  }
-}
-
 p {
-  text-align: center;
   margin: 10px 0;
   font-style: italic;
   color: #4a4a4a;
 }
 
+.placeholder {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-style: italic;
+  color: #4a4a4a;
+}
+
+.zoom-controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px 0;
+}
+
+.zoom-controls span {
+  margin: 0 10px;
+}
+
+.search-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 10px 0;
+}
+
+.search-container input {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.search-container button {
+  padding: 5px 10px;
+}
+
+.search-navigation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px 0;
+}
+
+.search-navigation button {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.search-navigation p {
+  margin: 5px 0;
+}
+
+.bookmarks {
+  margin-top: 20px;
+}
+
+.bookmarks h3 {
+  margin-bottom: 10px;
+}
+
+.bookmarks ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.bookmarks ul li {
+  margin-bottom: 5px;
+}
+
+.dark-mode-toggle {
+  margin-top: auto;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  padding: 20px;
+}
+
 @media (min-width: 0px) {
-  .App {
+  .sidebar {
     padding: 10px;
   }
   h1 {
     font-size: 20px;
   }
-  .pdf-container {
-    padding: 10px;
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
+@media (min-width: 720px) {
+  .sidebar-toggle {
+    display: none;
+  }
+  .sidebar-closed .sidebar {
+    -webkit-transform: translateX(-25vw);
+            transform: translateX(-25vw);
+  }
+  .sidebar-closed .main-content {
+    margin-left: 0;
+    width: 100%;
   }
 }
 
 @media (min-width: 960px) {
-  .App {
-    padding: 30px;
+  .sidebar {
+    width: 25vw;
   }
-  .pdf-container {
-    padding: 30px;
+  .main-content {
+    margin-left: 25vw;
+    width: calc(100% - 25vw);
   }
 }
 /*# sourceMappingURL=App.css.map */
