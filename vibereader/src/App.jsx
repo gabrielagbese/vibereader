@@ -1,9 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import { FaMoon, FaSun, FaSearch, FaBookmark } from 'react-icons/fa'
+import { FaMoon, FaSun, FaSearch, FaBookmark, FaPalette } from 'react-icons/fa'
 import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import './App.scss'
+import SpotifyIntegration from './SpotifyIntegration'
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -12,12 +13,19 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const STORAGE_KEY = 'vibeReaderState'
 
+const themes = {
+  default: 'Default',
+  sepia: 'Sepia',
+  night: 'Night',
+}
+
 function App() {
   const [file, setFile] = useState(null)
   const [fileId, setFileId] = useState(null)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   const [scale, setScale] = useState(1)
+  const [containerWidth, setContainerWidth] = useState('100%')
   const [darkMode, setDarkMode] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [bookmarks, setBookmarks] = useState([])
@@ -25,12 +33,19 @@ function App() {
   const [searchResults, setSearchResults] = useState([])
   const [currentSearchResult, setCurrentSearchResult] = useState(-1)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [pdfDocument, setPdfDocument] = useState(null)
+  const [documentTheme, setDocumentTheme] = useState('default')
   const pdfDocumentRef = useRef(null)
+
+  const isMobile = () => {
+    return window.innerWidth <= 768;
+  };
 
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
     setDarkMode(savedState.darkMode || false)
     setIsSidebarOpen(savedState.isSidebarOpen !== undefined ? savedState.isSidebarOpen : true)
+    setDocumentTheme(savedState.documentTheme || 'default')
   }, [])
 
   useEffect(() => {
@@ -54,8 +69,20 @@ function App() {
     }
     stateToSave.darkMode = darkMode
     stateToSave.isSidebarOpen = isSidebarOpen
+    stateToSave.documentTheme = documentTheme
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave))
-  }, [fileId, pageNumber, scale, bookmarks, darkMode, isSidebarOpen])
+  }, [fileId, pageNumber, scale, bookmarks, darkMode, isSidebarOpen, documentTheme])
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isMobile() && !isSidebarOpen) {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isSidebarOpen]);
 
   const onFileChange = (event) => {
     const selectedFile = event.target.files[0]
@@ -66,12 +93,19 @@ function App() {
       setError(null)
       setSearchResults([])
       setCurrentSearchResult(-1)
-      setPageNumber(1) // Reset to first page for new file
+      setPageNumber(1)
+      setScale(1)
+      setContainerWidth('100%')
+
+      if (isMobile()) {
+        setIsSidebarOpen(false)
+      }
     }
   }
 
   const onDocumentLoadSuccess = useCallback(({ numPages }) => {
     setNumPages(numPages)
+    setPdfDocument(pdfDocumentRef.current.pdfProxy)
   }, [])
 
   const onDocumentLoadError = (error) => {
@@ -88,11 +122,11 @@ function App() {
   }
 
   const handleSearch = async () => {
-    if (!pdfDocumentRef.current || !searchText) return
+    if (!pdfDocument || !searchText) return
 
     const results = []
     for (let i = 1; i <= numPages; i++) {
-      const page = await pdfDocumentRef.current.getPage(i)
+      const page = await pdfDocument.getPage(i)
       const textContent = await page.getTextContent()
       const text = textContent.items.map(item => item.str).join(' ')
 
@@ -131,20 +165,36 @@ function App() {
     setIsSidebarOpen(prevState => !prevState)
   }
 
+  const changeDocumentTheme = (theme) => {
+    setDocumentTheme(theme)
+  }
+
+  const handleZoom = (zoomIn) => {
+    setScale(prevScale => {
+      const newScale = zoomIn ? prevScale + 0.1 : Math.max(0.1, prevScale - 0.1)
+      setContainerWidth(`${newScale * 100}%`)
+      return newScale
+    })
+  }
+
+  const handleSpotifyLogin = () => {
+    alert('Spotify integration coming soon!');
+  };
+
   return (
     <div className={`App ${darkMode ? 'dark-mode' : ''} ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       <button className="sidebar-toggle" onClick={toggleSidebar}>
         {isSidebarOpen ? '←' : '→'}
       </button>
       <div className="sidebar">
-        <h1>ViberReader</h1>
+        <h1>VibeReader</h1>
         <input type="file" accept=".pdf" onChange={onFileChange} />
         {file && !error && (
           <>
             <div className="zoom-controls">
-              <button onClick={() => setScale(prevScale => prevScale - 0.1)}>Zoom Out</button>
+              <button onClick={() => handleZoom(false)}>Zoom Out</button>
               <span>{Math.round(scale * 100)}%</span>
-              <button onClick={() => setScale(prevScale => prevScale + 0.1)}>Zoom In</button>
+              <button onClick={() => handleZoom(true)}>Zoom In</button>
             </div>
             <div className="search-container">
               <input
@@ -162,6 +212,8 @@ function App() {
                 <p>Result {currentSearchResult + 1} of {searchResults.length}</p>
               </div>
             )}
+            <button onClick={handleSpotifyLogin}>Login to Spotify</button>
+            {/* <SpotifyIntegration /> */}
             <button onClick={toggleBookmark}>
               {bookmarks.includes(pageNumber) ? 'Remove Bookmark' : 'Add Bookmark'}
               <FaBookmark />
@@ -178,6 +230,14 @@ function App() {
                 </ul>
               </div>
             )}
+            <div className="theme-selector">
+              <FaPalette />
+              <select value={documentTheme} onChange={(e) => changeDocumentTheme(e.target.value)}>
+                {Object.entries(themes).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </div>
           </>
         )}
         <button onClick={toggleDarkMode} className="dark-mode-toggle">
@@ -189,7 +249,7 @@ function App() {
           <div className="error">{error}</div>
         ) : file ? (
           <>
-            <div className="pdf-container">
+            <div className={`pdf-container ${documentTheme}`} style={{ width: containerWidth }}>
               <Document
                 file={file}
                 onLoadSuccess={onDocumentLoadSuccess}
