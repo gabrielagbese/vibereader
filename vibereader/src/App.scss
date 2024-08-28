@@ -9,6 +9,12 @@ $button-text: #333;
 $button-hover: #d0d0d0;
 $button-disabled: #f0f0f0;
 
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   background-color: $bg-color;
   color: $text-color;
@@ -16,40 +22,58 @@ body {
 }
 
 .App {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: 100vh;
 
-  @include lg {
-    max-width: 800px;
+  @include md {
+    flex-direction: row;
+  }
+}
+
+.sidebar {
+  padding: 20px;
+  background-color: $bg-color;
+  border-bottom: 1px solid $border-color;
+
+  @include md {
+    width: 250px;
+    border-right: 1px solid $border-color;
+    border-bottom: none;
+    height: 100vh;
+    overflow-y: auto;
   }
 }
 
 h1 {
   font-size: 24px;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
   color: $accent-color;
-
-  @include md {
-    font-size: 28px;
-  }
 }
 
 input[type="file"] {
   margin-bottom: 20px;
+  width: 100%;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .pdf-container {
+  flex: 1;
   background-color: white;
-  border: 1px solid $border-color;
-  border-radius: 5px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
 
   .react-pdf__Document {
     display: flex;
@@ -59,8 +83,7 @@ input[type="file"] {
 
   .react-pdf__Page {
     max-width: 100%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    height: auto !important;
 
     canvas {
       max-width: 100%;
@@ -72,7 +95,7 @@ input[type="file"] {
 .navigation {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 button {
@@ -95,40 +118,36 @@ button {
     border-color: $button-disabled;
     cursor: not-allowed;
   }
-
-  @include md {
-    font-size: 16px;
-  }
 }
 
 p {
-  text-align: center;
   margin: 10px 0;
+  font-style: italic;
+  color: $accent-color;
+}
+
+.placeholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-style: italic;
   color: $accent-color;
 }
 
 // Responsive styles
 @include xs {
-  .App {
+  .sidebar {
     padding: 10px;
   }
 
   h1 {
     font-size: 20px;
   }
-
-  .pdf-container {
-    padding: 10px;
-  }
 }
 
 @include lg {
-  .App {
-    padding: 30px;
-  }
-
-  .pdf-container {
-    padding: 30px;
+  .sidebar {
+    width: 300px;
   }
 }

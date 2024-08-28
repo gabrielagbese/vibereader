@@ -30,32 +30,44 @@ function App() {
 
   return (
     <div className="App">
-      <h1>ViberReader</h1>
-      <input type="file" accept=".pdf" onChange={onFileChange} />
-      {file && (
-        <div className="pdf-container">
-          <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page pageNumber={pageNumber} />
-          </Document>
-          <p>
-            Page {pageNumber} of {numPages}
-          </p>
-          <div className="navigation">
-            <button
-              disabled={pageNumber <= 1}
-              onClick={() => setPageNumber(pageNumber - 1)}
-            >
-              Previous
-            </button>
-            <button
-              disabled={pageNumber >= numPages}
-              onClick={() => setPageNumber(pageNumber + 1)}
-            >
-              Next
-            </button>
+      <div className="sidebar">
+        <h1>ViberReader</h1>
+        <input type="file" accept=".pdf" onChange={onFileChange} />
+        {file && (
+          <div className="controls">
+            <p>
+              Page {pageNumber} of {numPages}
+            </p>
+            <div className="navigation">
+              <button
+                disabled={pageNumber <= 1}
+                onClick={() => setPageNumber(pageNumber - 1)}
+              >
+                Previous
+              </button>
+              <button
+                disabled={pageNumber >= numPages}
+                onClick={() => setPageNumber(pageNumber + 1)}
+              >
+                Next
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+      <div className="main-content">
+        {file ? (
+          <div className="pdf-container">
+            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page pageNumber={pageNumber} />
+            </Document>
+          </div>
+        ) : (
+          <div className="placeholder">
+            <p>Select a PDF to view</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,1 +1,169 @@
-/* No CSS *//*# sourceMappingURL=App.css.map */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #333;
+  font-family: "Georgia", serif;
+}
+
+.App {
+  height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+@media (min-width: 960px) {
+  .App {
+    max-width: 800px;
+  }
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  color: #4a4a4a;
+}
+
+@media (min-width: 720px) {
+  h1 {
+    font-size: 28px;
+  }
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+}
+
+.pdf-container {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.pdf-container .react-pdf__Document {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.pdf-container .react-pdf__Page {
+  max-width: 100%;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.pdf-container .react-pdf__Page canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.navigation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #e0e0e0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 3px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #d0d0d0;
+}
+
+button:disabled {
+  background-color: #f0f0f0;
+  color: #999999;
+  border-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+@media (min-width: 720px) {
+  button {
+    font-size: 16px;
+  }
+}
+
+p {
+  text-align: center;
+  margin: 10px 0;
+  font-style: italic;
+  color: #4a4a4a;
+}
+
+@media (min-width: 0px) {
+  .App {
+    padding: 10px;
+  }
+  h1 {
+    font-size: 20px;
+  }
+  .pdf-container {
+    padding: 10px;
+  }
+}
+
+@media (min-width: 960px) {
+  .App {
+    padding: 30px;
+  }
+  .pdf-container {
+    padding: 30px;
+  }
+}
+/*# sourceMappingURL=App.css.map */
